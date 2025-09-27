@@ -141,9 +141,10 @@ func (tv TValues) CompareExpiry() int {
 
 // --------------------------------------
 // Set/Get token to/from request context.
-//
-//nolint:gochecknoglobals // Context access key need to be global variable.
-var contextKey struct{}
+
+type contextType bool
+
+var contextKey contextType
 
 // ToCtx stores the decoded token in the request context.
 func (tv TValues) ToCtx(r *http.Request) *http.Request {

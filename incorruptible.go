@@ -214,10 +214,10 @@ func extractMainDomain(u *url.URL) (secure bool, dns, dir string) {
 		log.Panic("No URL => Cannot set Cookie domain")
 	}
 
-	switch {
-	case u.Scheme == HTTP:
+	switch u.Scheme {
+	case HTTP:
 		secure = false
-	case u.Scheme == HTTPS:
+	case HTTPS:
 		secure = true
 	default:
 		log.Panicf("Unexpected protocol scheme in %+v", u)

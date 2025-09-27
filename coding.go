@@ -82,16 +82,6 @@ func (meta Metadata) PutHeader(buf []byte, magic uint8) {
 	buf[2] = byte(meta)
 }
 
-func (meta Metadata) ipLength() int {
-	if (meta & maskIPv4) != 0 {
-		return net.IPv4len
-	}
-	if (meta & maskIP) != 0 {
-		return net.IPv6len
-	}
-	return 0
-}
-
 func (meta Metadata) IsCompressed() bool {
 	c := meta & maskCompress
 	return c != 0
@@ -184,4 +174,14 @@ func BytesToUint64(buf []byte) (uint64, error) {
 	case 0:
 		return 0, nil
 	}
+}
+
+func (meta Metadata) ipLength() int {
+	if (meta & maskIPv4) != 0 {
+		return net.IPv4len
+	}
+	if (meta & maskIP) != 0 {
+		return net.IPv6len
+	}
+	return 0
 }

@@ -44,8 +44,8 @@ func (incorr *Incorruptible) Chk(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tv, err := incorr.DecodeCookieToken(r)
-		switch {
-		case err == nil: // OK: put the token in the request context
+		switch err {
+		case nil: // OK: put the token in the request context
 			r = tv.ToCtx(r)
 		// case incorr.IsDev:
 		//	printErr("Chk DevMode no cookie", err)
@@ -72,8 +72,8 @@ func (incorr *Incorruptible) Vet(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tv, err := incorr.DecodeToken(r)
-		switch {
-		case err == nil:
+		switch err {
+		case nil:
 			r = tv.ToCtx(r) // put the token in the request context
 		// case !incorr.IsDev:
 		default:
