@@ -30,9 +30,9 @@ func TestUnmarshal(t *testing.T) {
 				return
 			}
 			aesKey := []byte("1234567890" + "123456") // 16 bytes = AES 128-bit key
-			incorr := incorruptible.New(nil, []*url.URL{u}, aesKey, "session", 0, true)
+			inc := incorruptible.New(nil, []*url.URL{u}, aesKey, "session", 0, true)
 
-			b, err := incorr.Marshal(c.tv, c.magic)
+			b, err := inc.Marshal(c.tv, c.magic)
 			if (err == nil) == c.wantErr {
 				t.Errorf("Marshal() error = %v, wantErr %v", err, c.wantErr)
 				return

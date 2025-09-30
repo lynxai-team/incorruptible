@@ -14,15 +14,15 @@ import (
 // The token is searched in the "session" cookie and in the first "Authorization" header.
 // The "session" cookie (that is added in the response) contains a minimalist "incorruptible" token.
 // Finally, Set stores the decoded token in the request context.
-func (incorr *Incorruptible) Set(next http.Handler) http.Handler {
+func (inc *Incorruptible) Set(next http.Handler) http.Handler {
 	log.Securityf("Middleware Incorruptible.Set cookie %q MaxAge=%v setIP=%v",
-		incorr.cookie.Name, incorr.cookie.MaxAge, incorr.SetIP)
+		inc.cookie.Name, inc.cookie.MaxAge, inc.SetIP)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tv, a := incorr.DecodeToken(r)
+		tv, a := inc.DecodeToken(r)
 		if a != nil {
 			// no valid token found => set a new token
-			cookie, newDT, err := incorr.NewCookie(r)
+			cookie, newDT, err := inc.NewCookie(r)
 			if err != nil {
 				log.S().Warning("Middleware IncorruptibleSet", err)
 				return
@@ -39,24 +39,25 @@ func (incorr *Incorruptible) Set(next http.Handler) http.Handler {
 // Use instead the Vet() middleware to also verify the "Authorization" header.
 // Chk finally stores the decoded token in the request context.
 // In dev. mode, Chk accepts requests without valid cookie but does not store invalid tokens.
-func (incorr *Incorruptible) Chk(next http.Handler) http.Handler {
-	log.Security("Middleware Incorruptible.Chk cookie only") // cookie DevMode=", incorr.IsDev)
+func (inc *Incorruptible) Chk(next http.Handler) http.Handler {
+	log.Security("Middleware Incorruptible.Chk cookie only") // cookie DevMode=", inc.IsDev)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tv, err := incorr.DecodeCookieToken(r)
+		tv, err := inc.DecodeCookieToken(r)
 		switch err {
 		case nil: // OK: put the token in the request context
 			r = tv.ToCtx(r)
-		// case incorr.IsDev:
+		// case inc.IsDev:
 		//	printErr("Chk DevMode no cookie", err)
 		default:
-			incorr.writeErr(w, r, http.StatusUnauthorized, err)
+			inc.writeErr(w, r, http.StatusUnauthorized, err)
 			return
 		}
 		next.ServeHTTP(w, r)
 	})
 }
 
+//nolint:unused // printErr is used in dev cycle (see above case inc.IsDev)
 func printErr(str string, err error) {
 	if doPrint {
 		log.Debugf("Incorr.%s: %v", str, err)
@@ -67,41 +68,41 @@ func printErr(str string, err error) {
 // either in the cookie or in the first "Authorization" header.
 // Vet finally stores the decoded token in the request context.
 // In dev. mode, Vet accepts requests without a valid token but does not store invalid tokens.
-func (incorr *Incorruptible) Vet(next http.Handler) http.Handler {
-	log.Security("Middleware Incorruptible.Vet cookie/bearer") //  DevMode=", incorr.IsDev)
+func (inc *Incorruptible) Vet(next http.Handler) http.Handler {
+	log.Security("Middleware Incorruptible.Vet cookie/bearer") //  DevMode=", inc.IsDev)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tv, err := incorr.DecodeToken(r)
+		tv, err := inc.DecodeToken(r)
 		switch err {
 		case nil:
 			r = tv.ToCtx(r) // put the token in the request context
-		// case !incorr.IsDev:
+		// case !inc.IsDev:
 		default:
-			//	incorr.writeErr(w, r, http.StatusUnauthorized, err...)
+			//	inc.writeErr(w, r, http.StatusUnauthorized, err...)
 			//	return
 		}
 		next.ServeHTTP(w, r)
 	})
 }
 
-func (incorr *Incorruptible) DecodeToken(r *http.Request) (TValues, []any) {
+func (inc *Incorruptible) DecodeToken(r *http.Request) (TValues, []any) {
 	var tv TValues
 	var err [2]error
 
 	for i := 0; i < 2; i++ {
 		var base91 string
 		if i == 0 {
-			base91, err[0] = incorr.CookieToken(r)
+			base91, err[0] = inc.CookieToken(r)
 		} else {
-			base91, err[1] = incorr.BearerToken(r)
+			base91, err[1] = inc.BearerToken(r)
 		}
 		if err[i] != nil {
 			continue
 		}
-		if incorr.equalMinimalistToken(base91) {
+		if inc.equalMinimalistToken(base91) {
 			return EmptyTValues(), nil
 		}
-		if tv, err[i] = incorr.Decode(base91); err[i] != nil {
+		if tv, err[i] = inc.Decode(base91); err[i] != nil {
 			continue
 		}
 		if err[i] = tv.Valid(r); err[i] != nil {
@@ -112,36 +113,36 @@ func (incorr *Incorruptible) DecodeToken(r *http.Request) (TValues, []any) {
 
 	return tv, []any{
 		fmt.Errorf("missing or invalid 'incorruptible' token in either "+
-			"the '%s' cookie or the 1st 'Authorization' header", incorr.cookie.Name),
+			"the '%s' cookie or the 1st 'Authorization' header", inc.cookie.Name),
 		"error_cookie", err[0],
 		"error_bearer", err[1],
 	}
 }
 
-func (incorr *Incorruptible) DecodeCookieToken(r *http.Request) (TValues, error) {
-	base91, err := incorr.CookieToken(r)
+func (inc *Incorruptible) DecodeCookieToken(r *http.Request) (TValues, error) {
+	base91, err := inc.CookieToken(r)
 	if err != nil {
 		return TValues{}, err
 	}
-	if incorr.equalMinimalistToken(base91) {
+	if inc.equalMinimalistToken(base91) {
 		return EmptyTValues(), nil
 	}
-	tv, err := incorr.Decode(base91)
+	tv, err := inc.Decode(base91)
 	if err != nil {
 		return tv, err
 	}
 	return tv, tv.Valid(r)
 }
 
-func (incorr *Incorruptible) DecodeBearerToken(r *http.Request) (TValues, error) {
-	base91, err := incorr.BearerToken(r)
+func (inc *Incorruptible) DecodeBearerToken(r *http.Request) (TValues, error) {
+	base91, err := inc.BearerToken(r)
 	if err != nil {
 		return TValues{}, err
 	}
-	if incorr.equalMinimalistToken(base91) {
+	if inc.equalMinimalistToken(base91) {
 		return EmptyTValues(), nil
 	}
-	tv, err := incorr.Decode(base91)
+	tv, err := inc.Decode(base91)
 	if err != nil {
 		return tv, err
 	}
@@ -149,8 +150,8 @@ func (incorr *Incorruptible) DecodeBearerToken(r *http.Request) (TValues, error)
 }
 
 // CookieToken returns the token (in base91 format) from the cookie.
-func (incorr *Incorruptible) CookieToken(r *http.Request) (string, error) {
-	cookie, err := r.Cookie(incorr.cookie.Name)
+func (inc *Incorruptible) CookieToken(r *http.Request) (string, error) {
+	cookie, err := r.Cookie(inc.cookie.Name)
 	if err != nil {
 		return "", err
 	}
@@ -170,7 +171,7 @@ func (incorr *Incorruptible) CookieToken(r *http.Request) (string, error) {
 }
 
 // BearerToken returns the token (in base91 format) from the HTTP Authorization header.
-func (incorr *Incorruptible) BearerToken(r *http.Request) (string, error) {
+func (inc *Incorruptible) BearerToken(r *http.Request) (string, error) {
 	auth := r.Header.Get("Authorization")
 	if auth == "" {
 		return "", errors.New("no 'Authorization: " + prefixScheme + "xxxxxxxx' in the request header")

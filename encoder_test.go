@@ -31,14 +31,14 @@ func TestDecode(t *testing.T) {
 		for _, key := range []string{aesKey, chaKey} {
 			secretKey := []byte(key)
 
-			incorr := incorruptible.New(nil, []*url.URL{u}, secretKey, "session", 0, true)
+			inc := incorruptible.New(nil, []*url.URL{u}, secretKey, "session", 0, true)
 
 			t.Run(c.name, func(t *testing.T) {
 				t.Parallel()
 
 				c.tv.ShortenIP4Length()
 
-				token, err := incorr.Encode(c.tv)
+				token, err := inc.Encode(c.tv)
 				if (err == nil) && c.wantErr {
 					t.Errorf("Encode() no error but want an error")
 					return
@@ -63,7 +63,7 @@ func TestDecode(t *testing.T) {
 				}
 				t.Logf("str len=%d [:%d]=%q", len(token), n, token[:n])
 
-				got, err := incorr.Decode(token)
+				got, err := inc.Decode(token)
 				if err != nil {
 					t.Error("Decode() error =", err)
 					return
@@ -87,7 +87,7 @@ func TestDecode(t *testing.T) {
 					t.Errorf("Mismatch Values got %v, want %v", got.Values, c.tv.Values)
 				}
 
-				cookie, err := incorr.NewCookieFromValues(c.tv)
+				cookie, err := inc.NewCookieFromValues(c.tv)
 				if err != nil {
 					t.Error("NewCookie()", err)
 					return

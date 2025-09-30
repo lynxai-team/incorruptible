@@ -31,24 +31,24 @@ const (
 	doPrint = false
 )
 
-func (incorr *Incorruptible) Encode(tv TValues) (string, error) {
+func (inc *Incorruptible) Encode(tv TValues) (string, error) {
 	printV("Encode Marshal", tv, nil)
 
-	plaintext, err := incorr.Marshal(tv, incorr.magic)
+	plaintext, err := inc.Marshal(tv, inc.magic)
 	if err != nil {
 		return "", err
 	}
 	printB("Encode Encrypt plaintext", plaintext)
 
-	nonceCiphertextAndTag := incorr.Encrypt(incorr.cipher, plaintext)
+	nonceCiphertextAndTag := inc.Encrypt(inc.cipher, plaintext)
 	printB("Encode EncodeToString ciphertext", nonceCiphertextAndTag)
 
-	str := incorr.baseN.EncodeToString(nonceCiphertextAndTag)
+	str := inc.baseN.EncodeToString(nonceCiphertextAndTag)
 	printS("Encode result = BasE91", str)
 	return str, nil
 }
 
-func (incorr *Incorruptible) Decode(base91 string) (TValues, error) {
+func (inc *Incorruptible) Decode(base91 string) (TValues, error) {
 	var tv TValues
 
 	printS("Decode DecodeString BasE91", base91)
@@ -57,7 +57,7 @@ func (incorr *Incorruptible) Decode(base91 string) (TValues, error) {
 		return tv, fmt.Errorf("BasE91 text too short: %d < min=%d", len(base91), Base91MinSize)
 	}
 
-	encrypted, err := incorr.baseN.DecodeString(base91)
+	encrypted, err := inc.baseN.DecodeString(base91)
 	if err != nil {
 		return tv, err
 	}
@@ -67,13 +67,13 @@ func (incorr *Incorruptible) Decode(base91 string) (TValues, error) {
 		return tv, fmt.Errorf("encrypted data too short: %d < min=%d", len(encrypted), encryptedMinSize)
 	}
 
-	plaintext, err := Decrypt(incorr.cipher, encrypted)
+	plaintext, err := Decrypt(inc.cipher, encrypted)
 	if err != nil {
 		return tv, err
 	}
 	printB("Decode Unmarshal plaintext", plaintext)
 
-	if MagicCode(plaintext) != incorr.magic {
+	if MagicCode(plaintext) != inc.magic {
 		return tv, errors.New("bad magic code")
 	}
 

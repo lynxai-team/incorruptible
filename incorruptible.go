@@ -18,7 +18,7 @@ import (
 )
 
 //nolint:gochecknoglobals // global logger
-var log = emo.NewZone("incorr")
+var log = emo.NewZone("inc")
 
 type Incorruptible struct {
 	writeErr WriteErr
@@ -71,7 +71,7 @@ func New(writeErr WriteErr, urls []*url.URL, secretKey []byte, cookieName string
 		log.Panic("crypto/rand.Read err=", err)
 	}
 
-	incorr := Incorruptible{
+	inc := Incorruptible{
 		writeErr: writeErr,
 		SetIP:    setIP,
 		cookie:   newCookie(cookieName, secure, dns, dir, maxAge),
@@ -81,48 +81,48 @@ func New(writeErr WriteErr, urls []*url.URL, secretKey []byte, cookieName string
 		rand:     rand.NewChaCha8(seed),
 	}
 
-	incorr.addMinimalistToken()
+	inc.addMinimalistToken()
 
 	log.Securityf("Cookie %s Domain=%v Path=%v Max-Age=%v Secure=%v SameSite=%v HttpOnly=%v Value=%d bytes",
-		incorr.cookie.Name, incorr.cookie.Domain, incorr.cookie.Path, incorr.cookie.MaxAge,
-		incorr.cookie.Secure, incorr.cookie.SameSite, incorr.cookie.HttpOnly, len(incorr.cookie.Value))
+		inc.cookie.Name, inc.cookie.Domain, inc.cookie.Path, inc.cookie.MaxAge,
+		inc.cookie.Secure, inc.cookie.SameSite, inc.cookie.HttpOnly, len(inc.cookie.Value))
 
-	return &incorr
+	return &inc
 }
 
-func (incorr *Incorruptible) addMinimalistToken() {
-	if !incorr.useMinimalistToken() {
+func (inc *Incorruptible) addMinimalistToken() {
+	if !inc.useMinimalistToken() {
 		return
 	}
 
 	// serialize a minimalist token
 	// including encryption and Base91-encoding
-	token, err := incorr.Encode(EmptyTValues())
+	token, err := inc.Encode(EmptyTValues())
 	if err != nil {
 		log.Panic(err)
 	}
 
 	// insert this generated token in the cookie
-	incorr.cookie.Value = tokenScheme + token
+	inc.cookie.Value = tokenScheme + token
 }
 
 // NewCookie creates a new cookie based on default values.
-// the HTTP request parameter is used to get the remote IP (only when incorr.SetIP is true).
-func (incorr *Incorruptible) NewCookie(r *http.Request, keyValues ...KVal) (*http.Cookie, TValues, error) {
-	cookie := incorr.cookie // local copy of the default cookie
+// the HTTP request parameter is used to get the remote IP (only when inc.SetIP is true).
+func (inc *Incorruptible) NewCookie(r *http.Request, keyValues ...KVal) (*http.Cookie, TValues, error) {
+	cookie := inc.cookie // local copy of the default cookie
 
-	tv, err := incorr.NewTValues(r)
+	tv, err := inc.NewTValues(r)
 	if err != nil {
 		return &cookie, tv, err
 	}
 
-	if !incorr.useMinimalistToken() || (len(keyValues) > 0) {
+	if !inc.useMinimalistToken() || (len(keyValues) > 0) {
 		err := tv.Set(keyValues...)
 		if err != nil {
 			return &cookie, tv, err
 		}
 
-		token, err := incorr.Encode(tv)
+		token, err := inc.Encode(tv)
 		if err != nil {
 			return &cookie, tv, err
 		}
@@ -133,12 +133,12 @@ func (incorr *Incorruptible) NewCookie(r *http.Request, keyValues ...KVal) (*htt
 	return &cookie, tv, nil
 }
 
-func (incorr *Incorruptible) NewTValues(r *http.Request, keyValues ...KVal) (TValues, error) {
+func (inc *Incorruptible) NewTValues(r *http.Request, keyValues ...KVal) (TValues, error) {
 	var tv TValues
 
-	if !incorr.useMinimalistToken() {
-		tv.SetExpiry(incorr.cookie.MaxAge)
-		if incorr.SetIP {
+	if !inc.useMinimalistToken() {
+		tv.SetExpiry(inc.cookie.MaxAge)
+		if inc.SetIP {
 			err := tv.SetRemoteIP(r)
 			if err != nil {
 				return tv, err
@@ -150,17 +150,17 @@ func (incorr *Incorruptible) NewTValues(r *http.Request, keyValues ...KVal) (TVa
 	return tv, err
 }
 
-func (incorr *Incorruptible) NewCookieFromValues(tv TValues) (*http.Cookie, error) {
-	token, err := incorr.Encode(tv)
+func (inc *Incorruptible) NewCookieFromValues(tv TValues) (*http.Cookie, error) {
+	token, err := inc.Encode(tv)
 	if err != nil {
-		return &incorr.cookie, err
+		return &inc.cookie, err
 	}
-	cookie := incorr.NewCookieFromToken(token, tv.MaxAge())
+	cookie := inc.NewCookieFromToken(token, tv.MaxAge())
 	return cookie, nil
 }
 
-func (incorr *Incorruptible) NewCookieFromToken(token string, maxAge int) *http.Cookie {
-	cookie := incorr.cookie
+func (inc *Incorruptible) NewCookieFromToken(token string, maxAge int) *http.Cookie {
+	cookie := inc.cookie
 	cookie.Value = tokenScheme + token
 	cookie.MaxAge = maxAge
 	return &cookie
@@ -174,8 +174,8 @@ func (incorr *Incorruptible) NewCookieFromToken(token string, maxAge int) *http.
 //	func logout(w http.ResponseWriter, r *http.Request) {
 //	    http.SetCookie(w, Incorruptible.DeadCookie())
 //	}
-func (incorr *Incorruptible) DeadCookie() *http.Cookie {
-	cookie := incorr.cookie // local copy of the default cookie
+func (inc *Incorruptible) DeadCookie() *http.Cookie {
+	cookie := inc.cookie // local copy of the default cookie
 	cookie.Value = ""
 	cookie.MaxAge = -1 // MaxAge<0 means "delete cookie now"
 	return &cookie
@@ -184,12 +184,12 @@ func (incorr *Incorruptible) DeadCookie() *http.Cookie {
 // Cookie returns a pointer to the default cookie values.
 // This can be used to customize some cookie values (may break),
 // and also to facilitate testing.
-func (incorr *Incorruptible) Cookie(_ int) *http.Cookie {
-	return &incorr.cookie
+func (inc *Incorruptible) Cookie(_ int) *http.Cookie {
+	return &inc.cookie
 }
 
-func (incorr *Incorruptible) CookieName() string {
-	return incorr.cookie.Name
+func (inc *Incorruptible) CookieName() string {
+	return inc.cookie.Name
 }
 
 // URL schemes.
@@ -198,14 +198,14 @@ const (
 	HTTPS = "https"
 )
 
-func (incorr *Incorruptible) useMinimalistToken() bool {
-	return (incorr.cookie.MaxAge <= 0) && (!incorr.SetIP)
+func (inc *Incorruptible) useMinimalistToken() bool {
+	return (inc.cookie.MaxAge <= 0) && (!inc.SetIP)
 }
 
 // equalMinimalistToken compares with the default token.
-func (incorr *Incorruptible) equalMinimalistToken(base91 string) bool {
+func (inc *Incorruptible) equalMinimalistToken(base91 string) bool {
 	const schemeSize = len(tokenScheme) // to skip the token scheme
-	return incorr.useMinimalistToken() && (base91 == incorr.cookie.Value[schemeSize:])
+	return inc.useMinimalistToken() && (base91 == inc.cookie.Value[schemeSize:])
 }
 
 //nolint:nonamedreturns // we want to document the returned values.

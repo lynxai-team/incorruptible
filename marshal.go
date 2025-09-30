@@ -67,8 +67,8 @@ func doesCompress(payloadSize int, randGen *rand.ChaCha8) bool {
 // The format starts with a magic code (2 bytes),
 // followed by the expiry time, the client IP, the user-defined values,
 // and ends with random salt as padding for a final size aligned on 32 bits.
-func (incorr *Incorruptible) Marshal(tv TValues, magic uint8) ([]byte, error) {
-	s := newSerializer(tv, incorr.rand)
+func (inc *Incorruptible) Marshal(tv TValues, magic uint8) ([]byte, error) {
+	s := newSerializer(tv, inc.rand)
 
 	b, err := s.putHeaderExpiryIP(magic, tv)
 	if err != nil {
@@ -93,7 +93,7 @@ func (incorr *Incorruptible) Marshal(tv TValues, magic uint8) ([]byte, error) {
 	}
 
 	if EnablePadding {
-		b = s.appendPadding(b, incorr.rand)
+		b = s.appendPadding(b, inc.rand)
 	}
 
 	return b, nil

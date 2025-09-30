@@ -99,10 +99,10 @@ func NewChaCipher(secretKey []byte) cipher.AEAD {
 //
 // "math/rand" is 40 times faster than "crypto/rand"
 // see: https://github.com/SimonWaldherr/golang-benchmarks#random
-func (incorr *Incorruptible) Encrypt(aead cipher.AEAD, plaintext []byte) []byte {
+func (inc *Incorruptible) Encrypt(aead cipher.AEAD, plaintext []byte) []byte {
 	// the variable "all" will contain the nonce + the ciphertext + the potential GCM tag
 	all := make([]byte, aead.NonceSize(), aead.NonceSize()+len(plaintext)+gcmTagSize)
-	_, err := incorr.rand.Read(all) // write the nonce part only
+	_, err := inc.rand.Read(all) // write the nonce part only
 	if err != nil {
 		log.EncryptError(err)
 	}
