@@ -36,9 +36,9 @@ const (
 	prefixScheme = authScheme + tokenScheme
 )
 
-// New creates a new Incorruptible. The order of the parameters are consistent with garcon.NewJWTChecker.
-// The Garcon middleware constructors use a garcon.Writer as first parameter.
-// Please share your thoughts/feedback, we can still change that.
+// New creates a new Incorruptible. This function is designed to be easily used by github.com/LynxAIeu/garcon
+// Thus the parameters order is consistent with gc.NewJWTChecker, using gc.Writer as first parameter.
+// Please share your thoughts/feedback: we are unsure if this is a good idea... we can change it :-)
 func New(writeErr WriteErr, urls []*url.URL, secretKey []byte, cookieName string, maxAge int, setIP bool) *Incorruptible {
 	if writeErr == nil {
 		writeErr = defaultWriteErr
