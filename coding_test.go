@@ -17,7 +17,6 @@ func TestUnmarshal(t *testing.T) {
 	t.Parallel()
 
 	for _, c := range codingDataCases {
-		c := c
 
 		t.Run(c.name, func(t *testing.T) {
 			t.Parallel()

@@ -18,7 +18,6 @@ func TestDecode(t *testing.T) {
 	t.Parallel()
 
 	for _, c := range encoderDataCases {
-		c := c
 
 		u, err := url.Parse("http://host:8080/path/url")
 		if err != nil {

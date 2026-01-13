@@ -85,10 +85,7 @@ func (inc *Incorruptible) Decode(base91 string) (TValues, error) {
 // printS prints a string in debug mode (when doPrint is true).
 func printS(name, s string) {
 	if doPrint {
-		n := len(s)
-		if n > 30 {
-			n = 30
-		}
+		n := min(len(s), 30)
 		log.Debugf("Incorr.%s len=%d %q", name, len(s), s[:n])
 	}
 }
@@ -96,10 +93,7 @@ func printS(name, s string) {
 // printB prints a byte-buffer in debug mode (when doPrint is true).
 func printB(name string, buf []byte) {
 	if doPrint {
-		n := len(buf)
-		if n > 30 {
-			n = 30
-		}
+		n := min(len(buf), 30)
 		log.Debugf("Incorr.%s len=%d cap=%d %x", name, len(buf), cap(buf), buf[:n])
 	}
 }

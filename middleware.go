@@ -89,7 +89,7 @@ func (inc *Incorruptible) DecodeToken(r *http.Request) (TValues, []any) {
 	var tv TValues
 	var err [2]error
 
-	for i := 0; i < 2; i++ {
+	for i := range 2 {
 		var base91 string
 		if i == 0 {
 			base91, err[0] = inc.CookieToken(r)

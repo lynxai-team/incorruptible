@@ -64,7 +64,7 @@ func Unmarshal(buf []byte) (TValues, error) {
 func parseValues(buf []byte, nV int) ([][]byte, error) {
 	values := make([][]byte, 0, nV)
 
-	for i := 0; i < nV; i++ {
+	for i := range nV {
 		if len(buf) < (nV - i) {
 			return nil, fmt.Errorf("not enough bytes (%d) at length #%d", len(buf), i)
 		}

@@ -17,7 +17,6 @@ func TestTValues_Uint64(t *testing.T) {
 
 	for _, c := range dataCases {
 		// duplicate case data to enable parallel testing
-		c := c
 		c.tv.Values = append([][]byte(nil), c.tv.Values...)
 
 		t.Run(c.name, func(t *testing.T) {
@@ -51,7 +50,6 @@ func TestTValues_Int64(t *testing.T) {
 
 	for _, c := range dataCases {
 		// duplicate case data to enable parallel testing
-		c := c
 		c.tv.Values = append([][]byte(nil), c.tv.Values...)
 
 		t.Run(c.name, func(t *testing.T) {
@@ -86,7 +84,6 @@ func TestTValues_Bool(t *testing.T) {
 
 	for _, c := range dataCases {
 		// duplicate case data to enable parallel testing
-		c := c
 		c.tv.Values = append([][]byte(nil), c.tv.Values...)
 
 		t.Run(c.name, func(t *testing.T) {
@@ -124,7 +121,6 @@ func TestTValues_String(t *testing.T) {
 
 	for _, c := range dataCases {
 		// duplicate case data to enable parallel testing
-		c := c
 		c.tv.Values = append([][]byte(nil), c.tv.Values...)
 
 		t.Run(c.name, func(t *testing.T) {
@@ -163,7 +159,6 @@ func TestTValues_Set(t *testing.T) {
 
 	for _, c := range dataCases {
 		// duplicate case data to enable parallel testing
-		c := c
 		c.tv.Values = append([][]byte(nil), c.tv.Values...)
 
 		t.Run(c.name, func(t *testing.T) {
