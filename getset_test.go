@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/LynxAIeu/incorruptible"
+	"github.com/lynxai-team/incorruptible"
 )
 
 func TestTValues_Uint64(t *testing.T) {

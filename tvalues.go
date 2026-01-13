@@ -22,7 +22,7 @@ const (
 // TValues (Token Values) represents the decoded form of an Incorruptible token.
 type TValues struct {
 	Expires int64  // Unix time UTC (seconds since 1970)
-	IP      net.IP // TOTO: use netip.Addr
+	IP      net.IP // TODO: use netip.Addr
 	Values  [][]byte
 }
 

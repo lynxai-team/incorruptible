@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/LynxAIeu/incorruptible"
+	"github.com/lynxai-team/incorruptible"
 )
 
 func TestDecode(t *testing.T) {

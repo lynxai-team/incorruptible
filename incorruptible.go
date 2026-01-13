@@ -13,7 +13,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/LynxAIeu/emo"
+	"github.com/lynxai-team/emo"
 	baseN "github.com/mtraver/base91"
 )
 
@@ -36,7 +36,7 @@ const (
 	prefixScheme = authScheme + tokenScheme
 )
 
-// New creates a new Incorruptible. This function is designed to be easily used by github.com/LynxAIeu/garcon
+// New creates a new Incorruptible. This function is designed to be easily used by github.com/lynxai-team/garcon
 // Thus the parameters order is consistent with gc.NewJWTChecker, using gc.Writer as first parameter.
 // Please share your thoughts/feedback: we are unsure if this is a good idea... we can change it :-)
 func New(writeErr WriteErr, urls []*url.URL, secretKey []byte, cookieName string, maxAge int, setIP bool) *Incorruptible {

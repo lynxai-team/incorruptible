@@ -9,10 +9,10 @@ See the [limitations](#🚫-limitations).
 that the [_Garçon_ de café][w] likes to serve to clients.
 See the [origin of the name](#🍸-name).
 
-[i]: https://pkg.go.dev/badge/github.com/LynxAIeu/incorruptible.svg
-[d]: https://pkg.go.dev/github.com/LynxAIeu/incorruptible "Go documentation for Incorruptible"
-[b]: https://goreportcard.com/badge/github.com/LynxAIeu/incorruptible
-[r]: https://goreportcard.com/report/github.com/LynxAIeu/incorruptible
+[i]: https://pkg.go.dev/badge/github.com/lynxai-team/incorruptible.svg
+[d]: https://pkg.go.dev/github.com/lynxai-team/incorruptible "Go documentation for Incorruptible"
+[b]: https://goreportcard.com/badge/github.com/lynxai-team/incorruptible
+[r]: https://goreportcard.com/report/github.com/lynxai-team/incorruptible
 [t]: https://www.rfc-editor.org/rfc/rfc6750.html
 [c]: https://www.shakeitdrinkit.com/incorruptible-cocktail-1618.html
 [m]: https://en.wikipedia.org/wiki/Mocktail "Incorruptible is also a Mocktail: a cocktail without alcohol"
@@ -56,7 +56,7 @@ We think we did a good job,
 with a good tradeoff between
 security, performance and low bandwidth.
 
-[q]: https://github.com/LynxAIeu/quid
+[q]: https://github.com/lynxai-team/quid
 [s]: https://github.com/gorilla/sessions
 
 ## 🤫 Usage
@@ -135,7 +135,7 @@ The format consists of:
 - Conveyed values, up to 31 values (from 0 to 7900 bytes)
 - Optional random padding (padding length is also random)
 
-See also <https://pkg.go.dev/github.com/LynxAIeu/incorruptible/format>.
+See also <https://pkg.go.dev/github.com/lynxai-team/incorruptible/format>.
 
 The precision of the expiration time is defined
 at build time with [constants in the source code][c2].
@@ -153,8 +153,8 @@ If the token is too long, its payload
 is compressed with [Snappy S2][s2].
 
 [s2]: https://www.reddit.com/r/golang/comments/nziwb1/s2_fully_snappy_compatible_compression_faster_and/
-[c1]: https://github.com/LynxAIeu/incorruptible/blob/main/format/coding/expiry.go#L13
-[c2]: https://github.com/LynxAIeu/incorruptible/blob/main/format/marshal.go
+[c1]: https://github.com/lynxai-team/incorruptible/blob/main/format/coding/expiry.go#L13
+[c2]: https://github.com/lynxai-team/incorruptible/blob/main/format/marshal.go
 
 Then, the entire data bytes are encrypted with AES-GCM 128 bits.
 This encryption adds 28 bytes: 12 bytes for the nonce,
@@ -202,7 +202,7 @@ that uses a single word,
 and could be understood in different languages.
 So _Incorruptible_ was our best choice at that time.
 
-[g]: https://github.com/LynxAIeu/garcon
+[g]: https://github.com/lynxai-team/garcon
 
 ## ✨ Contributions welcome
 
@@ -217,14 +217,14 @@ and there is always plenty to do!
 
 If you have some suggestions or need a new feature,
 please open an [issue]
-or contact us at hello@lynxai.eu /
-[@LynxAIeu](https://x.com/LynxAIeu).
+or contact us at hello@lynxai.team /
+[@lynxai-team](https://x.com/lynxai-team).
 
 Feel free to [pull a request][pr] too.
 Your contributions are welcome. :wink:
 
-[issue]: https://github.com/LynxAIeu/incorruptible/issues
-[pr]: https://github.com/LynxAIeu/incorruptible/pulls
+[issue]: https://github.com/lynxai-team/incorruptible/issues
+[pr]: https://github.com/lynxai-team/incorruptible/pulls
 
 ## 🗽 Copyright and license
 
