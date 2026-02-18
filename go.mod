@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/klauspost/compress v1.18.4
-	github.com/lynxai-team/emo v0.0.0-20260218201459-b332228ca341
+	github.com/lynxai-team/emo v0.0.0-20260218232934-c80315014f83
 	github.com/mtraver/base91 v1.0.0
 	golang.org/x/crypto v0.48.0
 )

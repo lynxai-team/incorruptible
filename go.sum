@@ -2,8 +2,8 @@ github.com/acmacalister/skittles v0.0.0-20160609003031-7423546701e1 h1:RKnVV4C7q
 github.com/acmacalister/skittles v0.0.0-20160609003031-7423546701e1/go.mod h1:gI5CyA/CEnS6eqNV22rqs4dG3aGfaSbXgPORIlwr2r0=
 github.com/klauspost/compress v1.18.4 h1:RPhnKRAQ4Fh8zU2FY/6ZFDwTVTxgJ/EMydqSTzE9a2c=
 github.com/klauspost/compress v1.18.4/go.mod h1:R0h/fSBs8DE4ENlcrlib3PsXS61voFxhIs2DeRhCvJ4=
-github.com/lynxai-team/emo v0.0.0-20260218201459-b332228ca341 h1:57t0L2xdAjgrf5U8DN6JMhnQrxMZwqrB+ulYnNrNk7A=
-github.com/lynxai-team/emo v0.0.0-20260218201459-b332228ca341/go.mod h1:uD8lUBsYqgeKIkHgDMsxA9xmY8527rxHCpnuj9v7VS4=
+github.com/lynxai-team/emo v0.0.0-20260218232934-c80315014f83 h1:jQ1iF8cg+4sURKrlKl6JgtPDoiUhUxb8gNHFUyYx5kc=
+github.com/lynxai-team/emo v0.0.0-20260218232934-c80315014f83/go.mod h1:uD8lUBsYqgeKIkHgDMsxA9xmY8527rxHCpnuj9v7VS4=
 github.com/mtraver/base91 v1.0.0 h1:vkIW96Xbw7QH1fbSV5VwXqv+xVuWWZji4O4ty8yYk28=
 github.com/mtraver/base91 v1.0.0/go.mod h1:Igwspit339nKvBhXGqrNOaNI8qGvh+Y4P76q5g4qH2Y=
 golang.org/x/crypto v0.48.0 h1:/VRzVqiRSggnhY7gNRxPauEQ5Drw9haKdM0jqfcCFts=
