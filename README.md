@@ -217,7 +217,7 @@ and there is always plenty to do!
 
 If you have some suggestions or need a new feature,
 please open an [issue]
-or contact us at hello@lynxai.team /
+or contact us at <hello@lynxai.team> /
 [@lynxai-team](https://x.com/lynxai-team).
 
 Feel free to [pull a request][pr] too.
