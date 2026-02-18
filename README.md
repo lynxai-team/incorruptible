@@ -56,7 +56,7 @@ We think we did a good job,
 with a good tradeoff between
 security, performance and low bandwidth.
 
-[q]: https://github.com/lynxai-team/quid
+[q]: https://github.com/TealsFi/quid
 [s]: https://github.com/gorilla/sessions
 
 ## 🤫 Usage
